@@ -16,6 +16,17 @@ namespace blazor.Components.Servicios
         {
             facturas = _servicioFacturas.GetFacturas();
         }
+        public void AgregarFactura(Factura factura)
+        {
+            if (factura.Items == null || factura.Items.Count == 0)
+            {
+                Console.WriteLine("La factura debe tener al menos un artículo.");
+                return;
+            }
+
+            _servicioFacturas.AddFactura(factura);
+            CargarFacturas();
+        }
     }
     
 }
