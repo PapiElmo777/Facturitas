@@ -57,8 +57,44 @@ namespace blazor.Components.Data
             }
             return facturas;
         }
-        
-        
+        public void AddFactura(Factura factura)
+        {
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+                using (var transaction = connection.BeginTransaction())
+                {
+                    long facturaId = 0;
+                    
+                    var cmdFactura = connection.CreateCommand();
+                    cmdFactura.Transaction = transaction;
+                    cmdFactura.CommandText = "INSERT INTO Facturas (Fecha, NombreCliente, Total) VALUES (@Fecha, @NombreCliente, @Total); SELECT last_insert_rowid();";
+                    cmdFactura.Parameters.AddWithValue("@Fecha", factura.Fecha);
+                    cmdFactura.Parameters.AddWithValue("@NombreCliente", factura.NombreCliente);
+                    cmdFactura.Parameters.AddWithValue("@Total", factura.Total); 
+                    facturaId = (long)cmdFactura.ExecuteScalar();
+
+                    if (facturaId == 0) {
+                        transaction.Rollback();
+                        return; 
+                    }
+
+                    foreach (var item in factura.Items)
+                    {
+                        var cmdArticulo = connection.CreateCommand();
+                        cmdArticulo.Transaction = transaction;
+                        cmdArticulo.CommandText = "INSERT INTO Articulos (FacturaId, Descripcion, Cantidad, PrecioUnitario) VALUES (@FacturaId, @Descripcion, @Cantidad, @PrecioUnitario)";
+                        cmdArticulo.Parameters.AddWithValue("@FacturaId", facturaId);
+                        cmdArticulo.Parameters.AddWithValue("@Descripcion", item.Descripcion);
+                        cmdArticulo.Parameters.AddWithValue("@Cantidad", item.Cantidad);
+                        cmdArticulo.Parameters.AddWithValue("@PrecioUnitario", item.PrecioUnitario);
+                        cmdArticulo.ExecuteNonQuery();
+                    }
+                    transaction.Commit();
+                }
+            }
+        }
+
     }
     
     
