@@ -12,6 +12,10 @@ namespace blazor.Components.Servicios
             _servicioFacturas = servicioFacturas;
             CargarFacturas();
         }
+        public void CargarFacturas()
+        {
+            facturas = _servicioFacturas.GetFacturas();
+        }
     }
     
 }
