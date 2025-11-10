@@ -35,6 +35,7 @@
                 (@item.Cantidad) @item.Descripcion - @item.PrecioUnitario.ToString("C")
                 Total: @item.TotalLinea.ToString("C")
                 <button @onclick="() => nuevaFactura.Items.Remove(item)">X</button>
+                <button @onclick="() => SeleccionarParaEditar(item)">Editar</button>
             </li>
         }
     </ul>
@@ -78,10 +79,22 @@ else
 @code {
     private Factura nuevaFactura = new Factura();
     private Articulo nuevoArticulo = new Articulo();
+    private Articulo articuloEdicion = null;
 
     protected override void OnInitialized()
     {
         controlador.CargarFacturas();
+    }
+    void SeleccionarParaEditar(Articulo item)
+    {
+        articuloEdicion = item;
+        nuevoArticulo = new Articulo
+        {
+            Descripcion = item.Descripcion,
+            Cantidad = item.Cantidad,
+            PrecioUnitario = item.PrecioUnitario
+        };
+
     }
     void AgregarArticulo()
     {
