@@ -58,3 +58,4 @@
 /Users/alfredojimenez/Desktop/facturas/blazor/bin/Debug/net9.0/runtimes/win-x86/native/e_sqlite3.dll
 /Users/alfredojimenez/Desktop/facturas/blazor/obj/Debug/net9.0/blazor.csproj.AssemblyReference.cache
 /Users/alfredojimenez/Desktop/facturas/blazor/obj/Debug/net9.0/blazor.csproj.Up2Date
+/Users/alfredojimenez/Desktop/facturas/blazor/obj/Debug/net9.0/blazor.sourcelink.json

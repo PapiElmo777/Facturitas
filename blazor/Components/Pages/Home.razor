@@ -1,7 +1,34 @@
 ﻿@page "/"
+@using blazor.Components.Data
+@using blazor.Components.Servicios
+@inject ServicioControlador controlador
 
 <PageTitle>Facturitas</PageTitle>
 
 <h1>Facturitas de la plebada!!!</h1>
+
+    @code{
+    private Factura nuevaFactura = new Factura();
+    private Articulo nuevoArticulo = new Articulo();
+
+    protected override void OnInitialized()
+    {
+        controlador.CargarFacturas();
+    }
+    void AgregarArticulo()
+    {
+        if (!string.IsNullOrWhiteSpace(nuevoArticulo.Descripcion) && nuevoArticulo.Cantidad > 0 && nuevoArticulo.PrecioUnitario > 0)
+        {
+            nuevaFactura.Items.Add(nuevoArticulo);
+            nuevoArticulo = new Articulo();
+        }
+    }
+    void GuardarFactura()
+    {
+        controlador.AgregarFactura(nuevaFactura);
+        nuevaFactura = new Factura();
+        nuevoArticulo = new Articulo();
+    }
+    }
 
 
