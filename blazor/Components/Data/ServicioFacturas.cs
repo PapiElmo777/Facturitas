@@ -24,14 +24,15 @@ namespace blazor.Components.Data
                 using (var readerFacturas = cmdFacturas.ExecuteReader())
                 {
                     while (readerFacturas.Read())
+                {
+                    facturas.Add(new Factura
                     {
-                        facturas.Add(new Factura
-                        {
-                            Id = readerFacturas.GetInt32(0),
-                            Fecha = readerFacturas.GetString(1),
-                            NombreCliente = readerFacturas.GetString(2)
-                        });
-                    }
+                        Id = readerFacturas.GetInt32(0),
+                        Fecha = readerFacturas.GetString(1),
+                        NombreCliente = readerFacturas.GetString(2),
+                        Items = new List<Articulo>() 
+                    });
+                }
                 }
                 foreach (var f in facturas)
                 {

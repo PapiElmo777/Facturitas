@@ -6,8 +6,75 @@
 <PageTitle>Facturitas</PageTitle>
 
 <h1>Facturitas de la plebada!!!</h1>
+<hr />
 
-    @code{
+<h4>Crear Nueva Factura</h4>
+    <div>
+        <label>Nombre Cliente:</label>
+        <input @bind="nuevaFactura.NombreCliente" placeholder="Nombre del cliente" />
+    </div>
+    <div>
+        <label>Fecha:</label>
+        <input @bind="nuevaFactura.Fecha" type="text" placeholder="Formato yyyy-MM-dd" />
+    </div>
+
+    <hr />
+
+    <h5>Agregar Artículo</h5>
+    <div>
+        <input @bind="nuevoArticulo.Descripcion" placeholder="Descripción" />
+        <input @bind="nuevoArticulo.Cantidad" type="number" placeholder="Cant" style="width: 60px;" />
+        <input @bind="nuevoArticulo.PrecioUnitario" type="number" placeholder="Precio U." style="width: 80px;" />
+        <button @onclick="AgregarArticulo">Agregar Artículo</button>
+    </div>
+    <ul>
+        @foreach (var item in nuevaFactura.Items)
+        {
+            <li>
+                (@item.Cantidad) @item.Descripcion - @item.PrecioUnitario.ToString("C")
+                Total: @item.TotalLinea.ToString("C")
+                <button @onclick="() => nuevaFactura.Items.Remove(item)">X</button>
+            </li>
+        }
+    </ul>
+    <h4>Total Factura: @nuevaFactura.Total.ToString("C")</h4>
+    <button @onclick="GuardarFactura" disabled="@(nuevaFactura.Items.Count == 0)">
+        Guardar Factura
+    </button>
+
+<hr />
+
+<h4>Facturas Guardadas</h4>
+@if (controlador.facturas == null || controlador.facturas.Count == 0)
+{
+    <p>No hay facturas guardadas.</p>
+}
+else
+{
+    @foreach (var factura in controlador.facturas)
+    {
+        <div>
+            <p>
+                <strong>ID: @factura.Id</strong> | 
+                Fecha: @factura.Fecha
+            </p>
+            <p>
+                Cliente: @factura.NombreCliente
+            </p>
+            <ul>
+                @foreach (var item in factura.Items)
+                {
+                    <li>(@item.Cantidad) @item.Descripcion - @item.PrecioUnitario.ToString("C")</li>
+                }
+            </ul>
+            <p style="text-align: right; font-weight: bold;">
+                Total: @factura.Total.ToString("C")
+            </p>
+        </div>
+    }
+}
+
+@code {
     private Factura nuevaFactura = new Factura();
     private Articulo nuevoArticulo = new Articulo();
 
@@ -23,12 +90,11 @@
             nuevoArticulo = new Articulo();
         }
     }
+
     void GuardarFactura()
     {
         controlador.AgregarFactura(nuevaFactura);
         nuevaFactura = new Factura();
         nuevoArticulo = new Articulo();
     }
-    }
-
-
+}
