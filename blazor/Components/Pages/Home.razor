@@ -105,20 +105,28 @@ else
     }
     void AgregarOActualizarArticulo()
     {
-
+       if (!string.IsNullOrWhiteSpace(nuevoArticulo.Descripcion) && nuevoArticulo.Cantidad > 0 && nuevoArticulo.PrecioUnitario > 0)
+        {
+            if (articuloEdicion == null)
+            {
+                nuevaFactura.Items.Add(nuevoArticulo);
+            }
+            else
+            {
+                articuloEdicion.Descripcion = nuevoArticulo.Descripcion;
+                articuloEdicion.Cantidad = nuevoArticulo.Cantidad;
+                articuloEdicion.PrecioUnitario = nuevoArticulo.PrecioUnitario;
+            
+            CancelarEdicion();
+        }
+    } 
     }
     void CancelarEdicion()
     {
-
+        nuevoArticulo = new Articulo();
+        articuloEdicion = null;
     }
-    void AgregarArticulo()
-    {
-        if (!string.IsNullOrWhiteSpace(nuevoArticulo.Descripcion) && nuevoArticulo.Cantidad > 0 && nuevoArticulo.PrecioUnitario > 0)
-        {
-            nuevaFactura.Items.Add(nuevoArticulo);
-            nuevoArticulo = new Articulo();
-        }
-    }
+    
 
     void GuardarFactura()
     {
