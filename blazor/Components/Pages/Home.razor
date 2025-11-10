@@ -21,12 +21,16 @@
 
     <hr />
 
-    <h5>Agregar Artículo</h5>
+    <h5>@(articuloEdicion == null ? "Agregar Articulo" : "Editando articulo")</h5>
     <div>
-        <input @bind="nuevoArticulo.Descripcion" placeholder="Descripción" />
-        <input @bind="nuevoArticulo.Cantidad" type="number" placeholder="Cant" style="width: 60px;" />
-        <input @bind="nuevoArticulo.PrecioUnitario" type="number" placeholder="Precio U." style="width: 80px;" />
-        <button @onclick="AgregarArticulo">Agregar Artículo</button>
+        <button @onclick="AgregarOActualizarArticulo">
+        @(articuloEdicion == null ? "Agregar Artículo" : "Actualizar Artículo")
+    </button>
+
+    @if (articuloEdicion != null)
+    {
+        <button @onclick="CancelarEdicion">Cancelar</button>
+    }
     </div>
     <ul>
         @foreach (var item in nuevaFactura.Items)
@@ -95,6 +99,14 @@ else
             PrecioUnitario = item.PrecioUnitario
         };
 
+    }
+    void AgregarOActualizarArticulo()
+    {
+
+    }
+    void CancelarEdicion()
+    {
+        
     }
     void AgregarArticulo()
     {
