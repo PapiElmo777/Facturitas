@@ -23,6 +23,9 @@
 
     <h5>@(articuloEdicion == null ? "Agregar Articulo" : "Editando articulo")</h5>
     <div>
+        <input @bind="nuevoArticulo.Descripcion" placeholder="Descripción" />
+        <input @bind="nuevoArticulo.Cantidad" type="number" placeholder="Cant" style="width: 60px;"/>
+        <input @bind="nuevoArticulo.PrecioUnitario" type="number" placeholder="Precio U." style="width: 80px;"/>
         <button @onclick="AgregarOActualizarArticulo">
         @(articuloEdicion == null ? "Agregar Artículo" : "Actualizar Artículo")
     </button>
@@ -106,7 +109,7 @@ else
     }
     void CancelarEdicion()
     {
-        
+
     }
     void AgregarArticulo()
     {
