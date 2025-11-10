@@ -109,7 +109,13 @@ else
         {
             if (articuloEdicion == null)
             {
-                nuevaFactura.Items.Add(nuevoArticulo);
+                var itemParaAgregar = new Articulo
+                {
+                    Descripcion = nuevoArticulo.Descripcion,
+                    Cantidad = nuevoArticulo.Cantidad,
+                    PrecioUnitario = nuevoArticulo.PrecioUnitario
+                };
+                nuevaFactura.Items.Add(itemParaAgregar);
             }
             else
             {
@@ -129,9 +135,9 @@ else
     
 
     void GuardarFactura()
-    {
-        controlador.AgregarFactura(nuevaFactura);
-        nuevaFactura = new Factura();
-        nuevoArticulo = new Articulo();
-    }
+{
+    controlador.AgregarFactura(nuevaFactura);
+    nuevaFactura = new Factura();
+    CancelarEdicion();
+}
 }
