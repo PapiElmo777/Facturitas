@@ -64,8 +64,7 @@ else
     {
         <div>
             <p>
-                <strong>ID: @factura.Id</strong> | 
-                Fecha: @factura.Fecha
+                <strong>ID: @factura.Id</strong> | Fecha: @factura.Fecha
             </p>
             <p>
                 Cliente: @factura.NombreCliente
@@ -79,6 +78,11 @@ else
             <p style="text-align: right; font-weight: bold;">
                 Total: @factura.Total.ToString("C")
             </p>
+            
+            <div style="text-align: right;">
+                <button @onclick="() => SeleccionarFacturaParaEditar(factura)">Editar</button>
+                <button @onclick="() => EliminarFacturaYRecargar(factura.Id)">Eliminar</button>
+            </div>
         </div>
     }
 }
