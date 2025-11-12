@@ -107,7 +107,43 @@ namespace blazor.Components.Data
                 cmd.ExecuteNonQuery();
             }
         }
-        
+        public void UpdateFactura(Factura factura)
+        {
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+                using (var transaction = connection.BeginTransaction())
+                {
+                    var cmdFactura = connection.CreateCommand();
+                    cmdFactura.Transaction = transaction;
+                    cmdFactura.CommandText = "UPDATE Facturas SET Fecha = @Fecha, NombreCliente = @NombreCliente, Total = @Total WHERE Id = @Id";
+                    cmdFactura.Parameters.AddWithValue("@Fecha", factura.Fecha);
+                    cmdFactura.Parameters.AddWithValue("@NombreCliente", factura.NombreCliente);
+                    cmdFactura.Parameters.AddWithValue("@Total", factura.Total);
+                    cmdFactura.Parameters.AddWithValue("@Id", factura.Id);
+                    cmdFactura.ExecuteNonQuery();
+
+                    var cmdBorrarArticulos = connection.CreateCommand();
+                    cmdBorrarArticulos.Transaction = transaction;
+                    cmdBorrarArticulos.CommandText = "DELETE FROM Articulos WHERE FacturaId = @FacturaId";
+                    cmdBorrarArticulos.Parameters.AddWithValue("@FacturaId", factura.Id);
+                    cmdBorrarArticulos.ExecuteNonQuery();
+                    foreach (var item in factura.Items)
+                    {
+                        var cmdArticulo = connection.CreateCommand();
+                        cmdArticulo.Transaction = transaction;
+                        cmdArticulo.CommandText = "INSERT INTO Articulos (FacturaId, Descripcion, Cantidad, PrecioUnitario) VALUES (@FacturaId, @Descripcion, @Cantidad, @PrecioUnitario)";
+                        cmdArticulo.Parameters.AddWithValue("@FacturaId", factura.Id);
+                        cmdArticulo.Parameters.AddWithValue("@Descripcion", item.Descripcion);
+                        cmdArticulo.Parameters.AddWithValue("@Cantidad", item.Cantidad);
+                        cmdArticulo.Parameters.AddWithValue("@PrecioUnitario", item.PrecioUnitario);
+                        cmdArticulo.ExecuteNonQuery();
+                    }
+                    
+                    transaction.Commit();
+                }
+            }
+        }
 
     }
     
