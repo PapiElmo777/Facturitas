@@ -28,7 +28,7 @@ namespace blazor.Components.Data
                     facturas.Add(new Factura
                     {
                         Id = readerFacturas.GetInt32(0),
-                        Fecha = readerFacturas.GetString(1),
+                        Fecha = DateTime.Parse(readerFacturas.GetString(1)),
                         NombreCliente = readerFacturas.GetString(2),
                         Items = new List<Articulo>() 
                     });

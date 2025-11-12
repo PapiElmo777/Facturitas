@@ -16,7 +16,7 @@
 </div>
     <div>
         <label>Fecha:</label>
-        <input @bind="nuevaFactura.Fecha" type="text" placeholder="Formato yyyy-MM-dd" />
+        <input @bind="nuevaFactura.Fecha" type="date"/>
     </div>
 
     <hr />
@@ -156,7 +156,7 @@ else
         {
             controlador.ActualizarFactura(nuevaFactura);
         }
-        GuardarOActualizarFactura();
+        CancelarEdicionFactura();
     }
     
     void SeleccionarFacturaParaEditar(Factura factura)
