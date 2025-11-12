@@ -153,6 +153,32 @@ else
         GuardarOActualizarFactura();
     }
     
-    
+    void SeleccionarFacturaParaEditar(Factura factura)
+    {
+        facturaEnEdicion = factura;
+        nuevaFactura = new Factura
+        {
+            Id = factura.Id,
+            Fecha = factura.Fecha,
+            NombreCliente = factura.NombreCliente,
+            Items = new List<Articulo>()
+        };
+        foreach (var item in factura.Items)
+        {
+            nuevaFactura.Items.Add(new Articulo 
+            {
+                Id = item.Id,
+                Descripcion = item.Descripcion,
+                Cantidad = item.Cantidad,
+                PrecioUnitario = item.PrecioUnitario,
+                FacturaId = item.FacturaId
+            });
+        }
+        CancelarEdicionArticulo();
+    }
+    void EliminarFacturaYRecargar(int id)
+    {
+
+    }
 
 }
