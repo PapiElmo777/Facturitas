@@ -7,9 +7,10 @@
 <PageTitle>Facturitas</PageTitle>
 
 <h1>Facturitas de la plebada!!!</h1>
-<hr />
+<hr style="height: 6px; background-color: rgb(0, 0, 0)">
 
 <h4>@(facturaEnEdicion == null ? "Crear Nueva Factura" : $"Editando Factura ID: {facturaEnEdicion.Id}")</h4>
+<hr style="height: 6px; background-color: rgb(0, 0, 0)">
 <div>
     <label>Nombre Cliente:</label>
     <input @bind="nuevaFactura.NombreCliente" placeholder="Nombre del cliente" />
@@ -19,9 +20,7 @@
         <input @bind="nuevaFactura.Fecha" type="date"/>
     </div>
 
-    <hr />
-
-    <h5>@(articuloEdicion == null ? "Agregar Articulo" : "Editando articulo")</h5>
+    <h4>@(articuloEdicion == null ? "Agregar Articulo" : "Editando articulo")</h4>
     <div>
         <input @bind="nuevoArticulo.Descripcion" placeholder="Descripción" />
         <input @bind="nuevoArticulo.Cantidad" type="number" placeholder="Cant" style="width: 60px;"/>
@@ -57,7 +56,7 @@
         <button @onclick="CancelarEdicionFactura">Cancelar Edición</button>
     }
 
-<hr />
+<hr style="height: 6px; background-color: rgb(0, 0, 0)">
 
 <h4>Facturas Guardadas</h4>
 @if (controlador.facturas == null || controlador.facturas.Count == 0)
@@ -66,6 +65,7 @@
 }
 else
 {
+    <hr style="height: 6px; background-color: rgb(0, 0, 0)">
     @foreach (var factura in controlador.facturas)
     {
         <div>
@@ -90,6 +90,7 @@ else
                 <button @onclick="() => EliminarFacturaYRecargar(factura.Id)">Eliminar</button>
             </div>
         </div>
+        <hr/>
     }
 }
 
