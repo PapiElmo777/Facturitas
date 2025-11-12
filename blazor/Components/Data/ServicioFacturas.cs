@@ -66,18 +66,19 @@ namespace blazor.Components.Data
                 using (var transaction = connection.BeginTransaction())
                 {
                     long facturaId = 0;
-                    
+
                     var cmdFactura = connection.CreateCommand();
                     cmdFactura.Transaction = transaction;
                     cmdFactura.CommandText = "INSERT INTO Facturas (Fecha, NombreCliente, Total) VALUES (@Fecha, @NombreCliente, @Total); SELECT last_insert_rowid();";
                     cmdFactura.Parameters.AddWithValue("@Fecha", factura.Fecha);
                     cmdFactura.Parameters.AddWithValue("@NombreCliente", factura.NombreCliente);
-                    cmdFactura.Parameters.AddWithValue("@Total", factura.Total); 
+                    cmdFactura.Parameters.AddWithValue("@Total", factura.Total);
                     facturaId = (long)cmdFactura.ExecuteScalar();
 
-                    if (facturaId == 0) {
+                    if (facturaId == 0)
+                    {
                         transaction.Rollback();
-                        return; 
+                        return;
                     }
 
                     foreach (var item in factura.Items)
@@ -95,6 +96,18 @@ namespace blazor.Components.Data
                 }
             }
         }
+        public void DeleteFactura(int id)
+        {
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+                var cmd = connection.CreateCommand();
+                cmd.CommandText = "DELETE FROM Facturas WHERE Id = @Id";
+                cmd.Parameters.AddWithValue("@Id", id);
+                cmd.ExecuteNonQuery();
+            }
+        }
+        
 
     }
     
