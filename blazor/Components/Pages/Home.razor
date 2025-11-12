@@ -178,7 +178,18 @@ else
     }
     void EliminarFacturaYRecargar(int id)
     {
-
+        controlador.EliminarFactura(id);
+        if (facturaEnEdicion != null && facturaEnEdicion.Id == id)
+        {
+            CancelarEdicionFactura();
+        }
+        StateHasChanged();
+    }
+    void CancelarEdicionFactura()
+    {
+        nuevaFactura = new Factura();
+        facturaEnEdicion = null;
+        CancelarEdicionArticulo();
     }
 
 }
