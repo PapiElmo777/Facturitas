@@ -9,11 +9,11 @@
 <h1>Facturitas de la plebada!!!</h1>
 <hr />
 
-<h4>Crear Nueva Factura</h4>
-    <div>
-        <label>Nombre Cliente:</label>
-        <input @bind="nuevaFactura.NombreCliente" placeholder="Nombre del cliente" />
-    </div>
+<h4>@(facturaEnEdicion == null ? "Crear Nueva Factura" : $"Editando Factura ID: {facturaEnEdicion.Id}")</h4>
+<div>
+    <label>Nombre Cliente:</label>
+    <input @bind="nuevaFactura.NombreCliente" placeholder="Nombre del cliente" />
+</div>
     <div>
         <label>Fecha:</label>
         <input @bind="nuevaFactura.Fecha" type="text" placeholder="Formato yyyy-MM-dd" />
@@ -47,9 +47,15 @@
         }
     </ul>
     <h4>Total Factura: @nuevaFactura.Total.ToString("C")</h4>
+
     <button @onclick="GuardarOActualizarFactura" disabled="@(nuevaFactura.Items.Count == 0)">
-        Guardar Factura
+        @(facturaEnEdicion == null ? "Guardar Factura" : "Actualizar Factura")
     </button>
+    
+    @if (facturaEnEdicion != null)
+    {
+        <button @onclick="CancelarEdicionFactura">Cancelar Edición</button>
+    }
 
 <hr />
 
