@@ -32,7 +32,7 @@
 
     @if (articuloEdicion != null)
     {
-        <button @onclick="CancelarEdicion">Cancelar</button>
+        <button @onclick="GuardarOActualizarFactura">Cancelar</button>
     }
     </div>
     <ul>
@@ -47,7 +47,7 @@
         }
     </ul>
     <h4>Total Factura: @nuevaFactura.Total.ToString("C")</h4>
-    <button @onclick="GuardarFactura" disabled="@(nuevaFactura.Items.Count == 0)">
+    <button @onclick="GuardarOActualizarFactura" disabled="@(nuevaFactura.Items.Count == 0)">
         Guardar Factura
     </button>
 
@@ -91,6 +91,7 @@ else
     private Factura nuevaFactura = new Factura();
     private Articulo nuevoArticulo = new Articulo();
     private Articulo articuloEdicion = null;
+    private Factura facturaEnEdicion = null;
 
     protected override void OnInitialized()
     {
@@ -127,21 +128,31 @@ else
                 articuloEdicion.Cantidad = nuevoArticulo.Cantidad;
                 articuloEdicion.PrecioUnitario = nuevoArticulo.PrecioUnitario;
             
-            CancelarEdicion();
+            GuardarOActualizarFactura();
         }
     } 
     }
-    void CancelarEdicion()
+    void CancelarEdicionArticulo()
     {
         nuevoArticulo = new Articulo();
         articuloEdicion = null;
     }
     
+    void GuardarOActualizarFactura()
+    {
+        nuevaFactura.Id = (facturaEnEdicion?.Id ?? 0);
 
-    void GuardarFactura()
-{
-    controlador.AgregarFactura(nuevaFactura);
-    nuevaFactura = new Factura();
-    CancelarEdicion();
-}
+        if (facturaEnEdicion == null)
+        {
+            controlador.AgregarFactura(nuevaFactura);
+        }
+        else
+        {
+            controlador.ActualizarFactura(nuevaFactura);
+        }
+        GuardarOActualizarFactura();
+    }
+    
+    
+
 }
