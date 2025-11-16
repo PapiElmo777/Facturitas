@@ -3,3 +3,13 @@
 @using blazor.Components.Servicios
 @using System.Globalization
 @inject ServicioControlador controlador
+
+<title>Reporte anual @Anio</title>
+<h1>Reporte del Año: @Anio</h1>
+<hr />
+
+
+@code{
+    public int Anio { get; set; }
+}
+
