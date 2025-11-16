@@ -54,5 +54,13 @@ else
     public int Anio { get; set; }
     private List<Factura> facturasDelAnio = new List<Factura>();
     private decimal totalAnual = 0;
+    protected override void alIniciar()
+    {
+        controlador.CargarFacturas();
+        facturasDelAnio = controlador.facturas
+            .Where(f => f.Fecha.Year == Anio)
+            .ToList();
+        totalAnual = facturasDelAnio.Sum(f => f.Total);
+    }
 }
 
