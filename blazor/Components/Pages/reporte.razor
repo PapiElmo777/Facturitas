@@ -2,7 +2,9 @@
 @using blazor.Components.Data
 @using blazor.Components.Servicios
 @using System.Globalization
+@rendermode InteractiveServer
 @inject ServicioControlador controlador
+
 
 <title>Reporte anual @Anio</title>
 <h1>Reporte del Año: @Anio</h1>
@@ -51,10 +53,11 @@ else
 }
 
 @code{
+    [Parameter]
     public int Anio { get; set; }
     private List<Factura> facturasDelAnio = new List<Factura>();
     private decimal totalAnual = 0;
-    protected override void alIniciar()
+    protected override void OnInitialized()
     {
         controlador.CargarFacturas();
         facturasDelAnio = controlador.facturas
