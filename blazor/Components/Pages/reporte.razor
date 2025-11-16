@@ -8,8 +8,51 @@
 <h1>Reporte del Año: @Anio</h1>
 <hr />
 
+@if (facturasDelAnio == null || !facturasDelAnio.Any())
+{
+    <p>No hay facturas para el año @Anio.</p>
+}
+else
+{
+    @foreach (var grupoMes in facturasDelAnio.GroupBy(f => f.Fecha.Month).OrderBy(g => g.Key))
+    {
+        var nombreMes = new CultureInfo("es-ES").DateTimeFormat.GetMonthName(grupoMes.Key);
+        
+        <h3>@System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(nombreMes)</h3>
+        
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="background-color: #f2f2f2;">
+                    <th style="padding: 8px; border: 1px solid #ddd; text-align: left;">ID Factura</th>
+                    <th style="padding: 8px; border: 1px solid #ddd; text-align: left;">Fecha</th>
+                    <th style="padding: 8px; border: 1px solid #ddd; text-align: left;">Cliente</th>
+                    <th style="padding: 8px; border: 1px solid #ddd; text-align: right;">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var factura in grupoMes.OrderBy(f => f.Fecha))
+                {
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid #ddd;">@factura.Id</td>
+                        <td style="padding: 8px; border: 1px solid #ddd;">@factura.Fecha.ToString("yyyy-MM-dd")</td>
+                        <td style="padding: 8px; border: 1px solid #ddd;">@factura.NombreCliente</td>
+                        <td style="padding: 8px; border: 1px solid #ddd; text-align: right;">@factura.Total.ToString("C")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <p style="text-align: right; font-weight: bold;">
+            Total @nombreMes: @grupoMes.Sum(f => f.Total).ToString("C")
+        </p>
+        <hr />
+    }
+
+    <h2 style="text-align: right; margin-top: 20px;">Total Anual (@Anio): @totalAnual.ToString("C")</h2>
+}
 
 @code{
     public int Anio { get; set; }
+    private List<Factura> facturasDelAnio = new List<Factura>();
+    private decimal totalAnual = 0;
 }
 
