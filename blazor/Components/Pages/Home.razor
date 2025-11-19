@@ -120,6 +120,19 @@ else
     private Articulo nuevoArticulo = new Articulo();
     private Articulo articuloEdicion = null;
     private Factura facturaEnEdicion = null;
+    // --- variables para el dashboard ---
+    private string statsMejorCliente = "---";
+    private string statsPlatilloTop = "---";
+    private string statsBebidaTop = "---";
+    private string statsFacturaCara = "---";
+    private string statsFacturaBarata = "---";
+    private string statsMejorMes = "---";
+    private string statsMejorAnio = "---";
+private static readonly string[] _palabrasClaveBebida = 
+    { 
+        "Vino añejo 20 años", "Agua mineral Botella", "Vino añejo 10 años", "Limonada", "Cerveza", "Vino Añejo 25 años", 
+        "Naranjada"
+    };
 
     protected override void OnInitialized()
     {
@@ -225,5 +238,6 @@ else
         facturaEnEdicion = null;
         CancelarEdicionArticulo();
     }
+    
 
 }
