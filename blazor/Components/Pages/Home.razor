@@ -290,4 +290,24 @@ private static readonly string[] _palabrasClaveBebida =
         if (cara != null) statsFacturaCara = $"{cara.Total:C} ({cara.NombreCliente})";
         if (barata != null) statsFacturaBarata = $"{barata.Total:C}";
     }
+
+    private void CalcularMejoresTiempos(List<Factura> facturas)
+    {
+        var mejorMes = facturas
+            .GroupBy(f => new { f.Fecha.Year, f.Fecha.Month })
+            .Select(g => new { Fecha = g.Key, Total = g.Sum(f => f.Total) })
+            .MaxBy(g => g.Total);
+
+        if (mejorMes != null)
+        {
+            string nombreMes = new CultureInfo("es-ES").DateTimeFormat.GetMonthName(mejorMes.Fecha.Month);
+            statsMejorMes = $"{char.ToUpper(nombreMes[0])}{nombreMes[1..]} {mejorMes.Fecha.Year}";
+        }
+        var mejorAnio = facturas
+            .GroupBy(f => f.Fecha.Year)
+            .Select(g => new { Anio = g.Key, Total = g.Sum(f => f.Total) })
+            .MaxBy(g => g.Total);
+
+        if (mejorAnio != null) statsMejorAnio = mejorAnio.Anio.ToString();
+    }
 }
