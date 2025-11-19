@@ -239,5 +239,15 @@ private static readonly string[] _palabrasClaveBebida =
         CancelarEdicionArticulo();
     }
     
+    //Metodos para dashboard
+    void CalcularEstadisticas()
+    {        
+        if (controlador.facturas is null || !controlador.facturas.Any()) return;
+        var listaFacturas = controlador.facturas;
 
+        CalcularMejorCliente(listaFacturas);
+        CalcularProductosTop(listaFacturas);
+        CalcularRecordsFacturas(listaFacturas);
+        CalcularMejoresTiempos(listaFacturas);
+    }
 }
