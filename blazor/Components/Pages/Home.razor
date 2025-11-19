@@ -250,4 +250,35 @@ private static readonly string[] _palabrasClaveBebida =
         CalcularRecordsFacturas(listaFacturas);
         CalcularMejoresTiempos(listaFacturas);
     }
+    private void CalcularMejorCliente(List<Factura> facturas)
+    {
+        var mejor = facturas
+            .GroupBy(f => f.NombreCliente)
+            .Select(g => new { Cliente = g.Key, Total = g.Sum(f => f.Total) })
+            .OrderByDescending(x => x.Total)
+            .FirstOrDefault();
+
+        if (mejor != null)
+            statsMejorCliente = $"{mejor.Cliente} ({mejor.Total:C})";
+    }
+
+    private void CalcularProductosTop(List<Factura> facturas)
+    {
+        var itemsResumen = facturas
+            .SelectMany(f => f.Items)
+            .GroupBy(i => i.Descripcion.ToLower().Trim())
+            .Select(g => new 
+            { 
+                Nombre = g.First().Descripcion,
+                Cantidad = g.Sum(i => i.Cantidad),
+                EsBebida = _palabrasClaveBebida.Any(k => g.Key.Contains(k)) 
+            })
+            .ToList();
+
+        var topBebida = itemsResumen.Where(x => x.EsBebida).MaxBy(x => x.Cantidad);
+        var topPlatillo = itemsResumen.Where(x => !x.EsBebida).MaxBy(x => x.Cantidad);
+
+        statsBebidaTop = topBebida != null ? $"{topBebida.Nombre} ({topBebida.Cantidad})" : "Sin datos";
+        statsPlatilloTop = topPlatillo != null ? $"{topPlatillo.Nombre} ({topPlatillo.Cantidad})" : "Sin datos";
+    }
 }
