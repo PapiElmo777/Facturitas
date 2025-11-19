@@ -281,4 +281,13 @@ private static readonly string[] _palabrasClaveBebida =
         statsBebidaTop = topBebida != null ? $"{topBebida.Nombre} ({topBebida.Cantidad})" : "Sin datos";
         statsPlatilloTop = topPlatillo != null ? $"{topPlatillo.Nombre} ({topPlatillo.Cantidad})" : "Sin datos";
     }
+
+    private void CalcularRecordsFacturas(List<Factura> facturas)
+    { 
+        var cara = facturas.MaxBy(f => f.Total);
+        var barata = facturas.MinBy(f => f.Total);
+
+        if (cara != null) statsFacturaCara = $"{cara.Total:C} ({cara.NombreCliente})";
+        if (barata != null) statsFacturaBarata = $"{barata.Total:C}";
+    }
 }
