@@ -289,7 +289,7 @@ private static readonly string[] _palabrasClaveBebida =
         CalcularMejorCliente(listaFacturas);
         CalcularProductosTop(listaFacturas);
         CalcularRecordsFacturas(listaFacturas);
-        CalcularMejoresTiempos(listaFacturas);
+        CalcularTiempos(listaFacturas);
     }
     private void CalcularMejorCliente(List<Factura> facturas)
     {
@@ -332,23 +332,34 @@ private static readonly string[] _palabrasClaveBebida =
         if (barata != null) statsFacturaBarata = $"{barata.Total:C}";
     }
 
-    private void CalcularMejoresTiempos(List<Factura> facturas)
+    private void CalcularTiempos(List<Factura> facturas)
     {
-        var mejorMes = facturas
+        var resumenMeses = facturas
             .GroupBy(f => new { f.Fecha.Year, f.Fecha.Month })
             .Select(g => new { Fecha = g.Key, Total = g.Sum(f => f.Total) })
-            .MaxBy(g => g.Total);
+            .ToList();
 
+        var mejorMes = resumenMeses.MaxBy(g => g.Total);
+        var peorMes = resumenMeses.MinBy(g => g.Total);
         if (mejorMes != null)
         {
             string nombreMes = new CultureInfo("es-ES").DateTimeFormat.GetMonthName(mejorMes.Fecha.Month);
             statsMejorMes = $"{char.ToUpper(nombreMes[0])}{nombreMes[1..]} {mejorMes.Fecha.Year}";
         }
-        var mejorAnio = facturas
+        if (peorMes != null)
+        {
+            string nombreMes = new CultureInfo("es-ES").DateTimeFormat.GetMonthName(peorMes.Fecha.Month);
+            statsPeorMes = $"{char.ToUpper(nombreMes[0])}{nombreMes[1..]} {peorMes.Fecha.Year}";
+        }
+        var resumenAnios = facturas
             .GroupBy(f => f.Fecha.Year)
             .Select(g => new { Anio = g.Key, Total = g.Sum(f => f.Total) })
-            .MaxBy(g => g.Total);
+            .ToList();
+
+        var mejorAnio = resumenAnios.MaxBy(g => g.Total);
+        var peorAnio = resumenAnios.MinBy(g => g.Total);
 
         if (mejorAnio != null) statsMejorAnio = mejorAnio.Anio.ToString();
+        if (peorAnio != null) statsPeorAnio = peorAnio.Anio.ToString();
     }
 }
