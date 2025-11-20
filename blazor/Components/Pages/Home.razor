@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using blazor.Components.Data
 @using blazor.Components.Servicios
+@using System.Globalization
 @rendermode InteractiveServer
 @inject ServicioControlador controlador
 @inject NavigationManager Navegador
@@ -11,7 +12,39 @@
     <h1>BaronRojo SteakHouse</h1>
     <p>Sistema de Gestion de Facturas y Ventas</p>
 </div>
+<div style="margin-bottom: 30px; padding: 15px; border: 1px solid #ccc;">
+    <h3 style="margin-top: 0;">Cuadro de Honor</h3>
+    
+    <div style="display: flex; flex-wrap: wrap; gap: 40px;">
+        
+        <div>
+            <strong>Mejor Cliente</strong>
+            <div style="font-size: 1.1em;">@statsMejorCliente</div>
+        </div>
 
+        <div>
+            <strong>Platillo Mas Vendido</strong>
+            <div style="font-size: 1.1em;">@statsPlatilloTop</div>
+        </div>
+
+        <div>
+            <strong>Bebida Mas Vendida</strong>
+            <div style="font-size: 1.1em;">@statsBebidaTop</div>
+        </div>
+
+        <div>
+            <strong>Records de Factura</strong>
+            <div>Mas Cara: @statsFacturaCara</div>
+            <div>Mas Barata: @statsFacturaBarata</div>
+        </div>
+
+        <div>
+            <strong>Mejores Tiempos</strong>
+            <div>Mejor Mes: @statsMejorMes</div>
+            <div>Mejor Año: @statsMejorAnio</div>
+        </div>
+    </div>
+</div> 
 <hr style="height: 6px; background-color: rgb(0, 0, 0)">
 <h4>@(facturaEnEdicion == null ? "Crear Nueva Factura" : $"Editando Factura ID: {facturaEnEdicion.Id}")</h4>
 <div>
@@ -128,6 +161,8 @@ else
     private string statsFacturaBarata = "---";
     private string statsMejorMes = "---";
     private string statsMejorAnio = "---";
+    //Variables de estado 
+    private int anioReporte = DateTime.Now.Year;
 private static readonly string[] _palabrasClaveBebida = 
     { 
         "Vino añejo 20 años", "Agua mineral Botella", "Vino añejo 10 años", "Limonada", "Cerveza", "Vino Añejo 25 años", 
@@ -137,6 +172,7 @@ private static readonly string[] _palabrasClaveBebida =
     protected override void OnInitialized()
     {
         controlador.CargarFacturas();
+        CalcularEstadisticas();
     }
     void SeleccionarParaEditar(Articulo item)
     {
@@ -149,7 +185,6 @@ private static readonly string[] _palabrasClaveBebida =
         };
 
     }
-    private int anioReporte = DateTime.Now.Year;
     void IrAReporte()
     {
         Navegador.NavigateTo($"/reporte/{anioReporte}");
