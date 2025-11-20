@@ -43,6 +43,11 @@
             <div>Mejor Mes: @statsMejorMes</div>
             <div>Mejor Año: @statsMejorAnio</div>
         </div>
+        <div>
+            <strong>Peores Tiempos</strong>
+            <div>Peor mes: @statsPeorMes</div>
+            <div>Peor año: @statsPeorAnio</div>
+        </div>
     </div>
 </div> 
 <hr style="height: 6px; background-color: rgb(0, 0, 0)">
@@ -161,7 +166,8 @@ else
     private string statsFacturaBarata = "---";
     private string statsMejorMes = "---";
     private string statsMejorAnio = "---";
-    //Variables de estado 
+    private string statsPeorMes = "---";
+    private string statsPeorAnio = "---";
     private int anioReporte = DateTime.Now.Year;
 private static readonly string[] _palabrasClaveBebida = 
     { 
