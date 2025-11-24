@@ -1,3 +1,29 @@
+:root {
+    --bg-app: #F4F4F4;            /* Fondo */
+    --bg-surface: #FFFFFF;        /* Tarjetas */
+    
+    --color-primary: #D70000;     /* ROJO BARON (Color principal) */
+    --color-primary-dark: #A50000;/* Hover */
+    --color-text-main: #111111;   /* Titulos */
+    --color-text-muted: #666666;  /* Subtítulos */
+    
+    --color-success: #28a745;     /* Verde  para dinero */
+    --color-danger: #D70000;      /* Rojo para borrar */
+
+    --radius-l: 16px;             /* Bordes redondeados */
+    --radius-m: 10px;             /* Bordes para inputs/botones */
+    --shadow-soft: 0 4px 24px rgba(0, 0, 0, 0.06); /* Sombra */
+    
+    --font-ui: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    background-color: var(--bg-app);
+    color: var(--color-text-main);
+    font-family: var(--font-ui);
+    margin: 0;
+    line-height: 1.5;
+}
 h1:focus {
     outline: none;
 }
