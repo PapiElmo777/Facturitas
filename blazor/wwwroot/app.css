@@ -75,6 +75,15 @@ button:contains("Agregar") {
 button.btn-primary:hover {
     background-color: var(--color-primary-dark);
 }
+/* BTN CANCELAR Y EDITAR */
+button.btn-secondary {
+    background-color: #EFEFEF;
+    color: var(--color-text-main);
+}
+button.btn-secondary:hover {
+    background-color: #E0E0E0;
+}
+
 h1:focus {
     outline: none;
 }
