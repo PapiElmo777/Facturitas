@@ -34,6 +34,21 @@ hr {
     background: #E0E0E0;
     margin: 2rem 0;
 }
+/* INPUTS */
+input {
+    background: var(--bg-surface);
+    border: 1px solid #DADADA;
+    border-radius: var(--radius-m);
+    padding: 12px 15px;
+    font-size: 15px;
+    color: var(--color-text-main);
+    outline: none;
+    transition: all 0.2s;
+}
+input:focus {
+    border-color: var(--color-text-main);
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
+}
 h1:focus {
     outline: none;
 }
