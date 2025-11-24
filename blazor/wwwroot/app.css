@@ -24,6 +24,16 @@ body {
     margin: 0;
     line-height: 1.5;
 }
+h1, h2, h3 {
+    color: var(--color-text-main);
+    letter-spacing: -0.5px;
+}
+hr {
+    border: 0;
+    height: 1px;
+    background: #E0E0E0;
+    margin: 2rem 0;
+}
 h1:focus {
     outline: none;
 }
