@@ -74,54 +74,74 @@
     </div>
     
     </div>
-<hr style="height: 6px; background-color: rgb(0, 0, 0)">
-<h4>@(facturaEnEdicion == null ? "Crear Nueva Factura" : $"Editando Factura ID: {facturaEnEdicion.Id}")</h4>
-<div>
-    <label>Nombre Cliente:</label>
-    <input @bind="nuevaFactura.NombreCliente" placeholder="Nombre del cliente" />
-</div>
-    <div>
-        <label>Fecha:</label>
-        <input @bind="nuevaFactura.Fecha" type="date"/>
+
+<div class="form-section">
+    <h4 class="form-title">
+        @(facturaEnEdicion == null ? "Nueva Factura" : $"Editando Factura #{facturaEnEdicion.Id}")
+    </h4>
+
+    <div class="input-group">
+        <div class="input-wrapper" style="flex: 2;">
+            <label>Cliente</label>
+            <input @bind="nuevaFactura.NombreCliente" placeholder="Ej: Juan Pérez" />
+        </div>
+        <div class="input-wrapper">
+            <label>Fecha</label>
+            <input @bind="nuevaFactura.Fecha" type="date" />
+        </div>
     </div>
 
-    <h4>@(articuloEdicion == null ? "Agregar Articulo" : "Editando articulo")</h4>
-    <div>
-        <input @bind="nuevoArticulo.Descripcion" placeholder="Descripción" />
-        <input @bind="nuevoArticulo.Cantidad" type="number" placeholder="Cant" style="width: 60px;"/>
-        <input @bind="nuevoArticulo.PrecioUnitario" type="number" placeholder="Precio U." style="width: 80px;"/>
-        <button @onclick="AgregarOActualizarArticulo">
-        @(articuloEdicion == null ? "Agregar Artículo" : "Actualizar Artículo")
-    </button>
+    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 20px 0;">
+        <label style="font-size: 0.85rem; font-weight: bold; margin-bottom: 10px; display:block;">
+            @(articuloEdicion == null ? "+ Agregar Artículo" : "Editar Artículo")
+        </label>
+        <div class="input-group" style="margin-bottom: 0;">
+            <input @bind="nuevoArticulo.Descripcion" placeholder="Descripción del producto" style="flex: 2;" />
+            <input @bind="nuevoArticulo.Cantidad" type="number" placeholder="Cant" style="width: 80px;" />
+            <input @bind="nuevoArticulo.PrecioUnitario" type="number" placeholder="Precio" style="width: 100px;" />
+            
+            <button class="btn-primary" @onclick="AgregarOActualizarArticulo">
+                @(articuloEdicion == null ? "Agregar" : "Actualizar")
+            </button>
+            @if (articuloEdicion != null)
+            {
+                <button class="btn-secondary" @onclick="CancelarEdicionArticulo">Cancelar</button>
+            }
+        </div>
+    </div>
 
-    @if (articuloEdicion != null)
+    @if (nuevaFactura.Items.Any())
     {
-        <button @onclick="GuardarOActualizarFactura">Cancelar</button>
+        <ul class="items-list">
+            @foreach (var item in nuevaFactura.Items)
+            {
+                <li>
+                    <span>
+                        <strong>@item.Cantidad x</strong> @item.Descripcion
+                    </span>
+                    <div style="display:flex; align-items:center; gap: 10px;">
+                        <span class="font-bold">@item.TotalLinea.ToString("C")</span>
+                        <button class="btn-icon btn-secondary" @onclick="() => SeleccionarParaEditar(item)">✎</button>
+                        <button class="btn-icon btn-danger" @onclick="() => nuevaFactura.Items.Remove(item)">✕</button>
+                    </div>
+                </li>
+            }
+        </ul>
+        <div style="text-align: right; font-size: 1.5rem; font-weight: bold; margin: 20px 0;">
+            Total: <span style="color: var(--color-primary);">@nuevaFactura.Total.ToString("C")</span>
+        </div>
     }
-    </div>
-    <ul>
-        @foreach (var item in nuevaFactura.Items)
+
+    <div style="display: flex; gap: 10px; justify-content: flex-end;">
+        @if (facturaEnEdicion != null)
         {
-            <li>
-                (@item.Cantidad) @item.Descripcion - @item.PrecioUnitario.ToString("C")
-                Total: @item.TotalLinea.ToString("C")
-                <button @onclick="() => nuevaFactura.Items.Remove(item)">X</button>
-                <button @onclick="() => SeleccionarParaEditar(item)">Editar</button>
-            </li>
+            <button class="btn-secondary" @onclick="CancelarEdicionFactura">Cancelar Edición</button>
         }
-    </ul>
-    <h4>Total Factura: @nuevaFactura.Total.ToString("C")</h4>
-
-    <button @onclick="GuardarOActualizarFactura" disabled="@(nuevaFactura.Items.Count == 0)">
-        @(facturaEnEdicion == null ? "Guardar Factura" : "Actualizar Factura")
-    </button>
-    
-    @if (facturaEnEdicion != null)
-    {
-        <button @onclick="CancelarEdicionFactura">Cancelar Edición</button>
-    }
-
-<hr style="height: 6px; background-color: rgb(0, 0, 0)">
+        <button class="btn-primary" @onclick="GuardarOActualizarFactura" disabled="@(nuevaFactura.Items.Count == 0)">
+            @(facturaEnEdicion == null ? "Guardar Factura" : "Actualizar Factura")
+        </button>
+    </div>
+</div>
 
 <h4>Generar Reporte Anual</h4>
 <div>
