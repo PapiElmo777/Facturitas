@@ -153,51 +153,75 @@
         </div>
     </div>
 
-<h4>Facturas Guardadas</h4>
-@if (controlador.facturas == null || controlador.facturas.Count == 0)
-{
-    <p>No hay facturas guardadas.</p>
-}
-else
-{
-    <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
-        <thead>
-            <tr style="background-color: #f2f2f2;">
-                <th style="padding: 8px; border: 1px solid #ddd; text-align: left;">ID</th>
-                <th style="padding: 8px; border: 1px solid #ddd; text-align: left;">Fecha</th>
-                <th style="padding: 8px; border: 1px solid #ddd; text-align: left;">Cliente</th>
-                <th style="padding: 8px; border: 1px solid #ddd; text-align: left;">Artículos</th>
-                <th style="padding: 8px; border: 1px solid #ddd; text-align: right;">Total</th>
-                <th style="padding: 8px; border: 1px solid #ddd; text-align: center;">Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var factura in controlador.facturas)
-            {
-                <tr>
-                    <td style="padding: 8px; border: 1px solid #ddd; vertical-align: top;">@factura.Id</td>
-                    <td style="padding: 8px; border: 1px solid #ddd; vertical-align: top;">@factura.Fecha.ToString("yyyy-MM-dd")</td>
-                    <td style="padding: 8px; border: 1px solid #ddd; vertical-align: top;">@factura.NombreCliente</td>
-                    <td style="padding: 8px; border: 1px solid #ddd;">
-                        <ul style="margin: 0; padding-left: 20px;">
-                            @foreach (var item in factura.Items)
-                            {
-                                <li>(@item.Cantidad) @item.Descripcion - @item.PrecioUnitario.ToString("C")</li>
-                            }
-                        </ul>
-                    </td>
-                    <td style="padding: 8px; border: 1px solid #ddd; text-align: right; vertical-align: top; font-weight: bold;">
-                        @factura.Total.ToString("C")
-                    </td>
-                    <td style="padding: 8px; border: 1px solid #ddd; text-align: center; vertical-align: middle;">
-                        <button @onclick="() => SeleccionarFacturaParaEditar(factura)">Editar</button>
-                        <button @onclick="() => EliminarFacturaYRecargar(factura.Id)">Eliminar</button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+<div style="display:flex; align-items:center; gap:10px; margin-bottom: 20px;">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:28px;height:28px;">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <h3 style="margin:0;">Facturas Guardadas</h3>
+    </div>
+    
+    @if (controlador.facturas == null || controlador.facturas.Count == 0)
+    {
+        <div style="text-align: center; padding: 40px; color: var(--color-text-muted);">
+            No hay facturas guardadas aún.
+        </div>
+    }
+    else
+    {
+        <div style="background: white; border-radius: var(--radius-l); padding: 20px; box-shadow: var(--shadow-soft); overflow-x: auto;">
+            <table class="table-modern">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha</th>
+                        <th>Cliente</th>
+                        <th>Productos</th>
+                        <th class="text-right">Total</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var factura in controlador.facturas)
+                    {
+                        <tr>
+                            <td style="vertical-align: top;">#@factura.Id</td>
+                            <td style="vertical-align: top;">@factura.Fecha.ToString("yyyy-MM-dd")</td>
+                            <td class="font-bold" style="vertical-align: top;">@factura.NombreCliente</td>
+                            
+                            <td>
+                                <div style="display: flex; flex-direction: column; gap: 4px;">
+                                    @foreach(var item in factura.Items)
+                                    {
+                                        <div style="font-size: 0.9rem; border-bottom: 1px dashed #eee; padding-bottom: 2px;">
+                                            <span style="font-weight: bold; color: var(--color-primary);">@item.Cantidad</span> 
+                                            <span style="color: #ccc; margin: 0 2px;">x</span> 
+                                            @item.Descripcion
+                                        </div>
+                                    }
+                                </div>
+                            </td>
+
+                            <td class="text-right font-bold" style="vertical-align: top;">@factura.Total.ToString("C")</td>
+                            <td class="text-center" style="vertical-align: top;">
+                                <div style="display:flex; justify-content:center; gap:5px;">
+                                    <button class="btn-icon btn-secondary" @onclick="() => SeleccionarFacturaParaEditar(factura)" title="Editar">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:16px;height:16px;">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z" />
+                                        </svg>
+                                    </button>
+                                    <button class="btn-icon btn-danger" @onclick="() => EliminarFacturaYRecargar(factura.Id)" title="Eliminar">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width:16px;height:16px;">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
 
 @code {
     private Factura nuevaFactura = new Factura();
