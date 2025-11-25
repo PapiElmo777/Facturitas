@@ -5,65 +5,89 @@
 @rendermode InteractiveServer
 @inject ServicioControlador controlador
 
+<title>Reporte Anual @Anio | BaronRojo</title>
 
-<title>Reporte anual @Anio</title>
-<h1>Reporte del Año: @Anio</h1>
-<hr />
+<div class="container-dashboard">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+        <div>
+            <h1 style="margin:0;">Reporte Financiero</h1>
+            <p style="margin:0; color: var(--color-text-muted);">Ejercicio Fiscal @Anio</p>
+        </div>
+        <a href="/" class="btn-secondary" style="text-decoration: none; padding: 10px 20px; display: inline-block;">
+            ← Volver al Dashboard
+        </a>
+    </div>
 
-@if (facturasDelAnio == null || !facturasDelAnio.Any())
-{
-    <p>No hay facturas para el año @Anio.</p>
-}
-else
-{
-    @foreach (var grupoMes in facturasDelAnio.GroupBy(f => f.Fecha.Month).OrderBy(g => g.Key))
+    @if (facturasDelAnio == null || !facturasDelAnio.Any())
     {
-        var nombreMes = new CultureInfo("es-ES").DateTimeFormat.GetMonthName(grupoMes.Key);
-        
-        <h3>@System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(nombreMes)</h3>
-        
-        <table style="width: 100%; border-collapse: collapse;">
-            <thead>
-                <tr style="background-color: #f2f2f2;">
-                    <th style="padding: 8px; border: 1px solid #ddd; text-align: left;">ID Factura</th>
-                    <th style="padding: 8px; border: 1px solid #ddd; text-align: left;">Fecha</th>
-                    <th style="padding: 8px; border: 1px solid #ddd; text-align: left;">Cliente</th>
-                    <th style="padding: 8px; border: 1px solid #ddd; text-align: right;">Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var factura in grupoMes.OrderBy(f => f.Fecha))
-                {
-                    <tr>
-                        <td style="padding: 8px; border: 1px solid #ddd;">@factura.Id</td>
-                        <td style="padding: 8px; border: 1px solid #ddd;">@factura.Fecha.ToString("yyyy-MM-dd")</td>
-                        <td style="padding: 8px; border: 1px solid #ddd;">@factura.NombreCliente</td>
-                        <td style="padding: 8px; border: 1px solid #ddd; text-align: right;">@factura.Total.ToString("C")</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-        <p style="text-align: right; font-weight: bold;">
-            Total @nombreMes: @grupoMes.Sum(f => f.Total).ToString("C")
-        </p>
-        <hr />
+        <div class="card" style="text-align: center; padding: 50px;">
+            <h3>No hay registros</h3>
+            <p class="text-muted">No se encontraron facturas registradas para el año @Anio.</p>
+            <a href="/" class="btn-primary" style="text-decoration: none;">Crear Factura</a>
+        </div>
     }
+    else
+    {
+        @foreach (var grupoMes in facturasDelAnio.GroupBy(f => f.Fecha.Month).OrderBy(g => g.Key))
+        {
+            var nombreMes = new CultureInfo("es-ES").DateTimeFormat.GetMonthName(grupoMes.Key);
+            var tituloMes = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(nombreMes);
+            var totalMes = grupoMes.Sum(f => f.Total);
 
-    <h2 style="text-align: right; margin-top: 20px;">Total Anual (@Anio): @totalAnual.ToString("C")</h2>
-}
+            <div class="card" style="margin-bottom: 30px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
+                    <h3 style="margin:0; color: var(--color-primary);">@tituloMes</h3>
+                    <span style="font-weight:bold; background: #eee; padding: 5px 10px; border-radius: 6px;">
+                        Total Mes: @totalMes.ToString("C")
+                    </span>
+                </div>
 
-@code{
+                <table class="table-modern">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Fecha</th>
+                            <th>Cliente</th>
+                            <th class="text-right">Monto</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var factura in grupoMes.OrderBy(f => f.Fecha))
+                        {
+                            <tr>
+                                <td>@factura.Id</td>
+                                <td>@factura.Fecha.ToString("yyyy-MM-dd")</td>
+                                <td>@factura.NombreCliente</td>
+                                <td class="text-right">@factura.Total.ToString("C")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+
+        <div class="card" style="background-color: #2C3E50; color: white;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2 style="margin: 0; color: white;">Total Anual (@Anio)</h2>
+                <h2 style="margin: 0; color: #4ade80;">@totalAnual.ToString("C")</h2>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
     [Parameter]
     public int Anio { get; set; }
     private List<Factura> facturasDelAnio = new List<Factura>();
     private decimal totalAnual = 0;
+
     protected override void OnInitialized()
     {
         controlador.CargarFacturas();
         facturasDelAnio = controlador.facturas
             .Where(f => f.Fecha.Year == Anio)
             .ToList();
+        
         totalAnual = facturasDelAnio.Sum(f => f.Total);
     }
 }
-
