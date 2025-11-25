@@ -7,49 +7,73 @@
 @inject NavigationManager Navegador
 
 <PageTitle>BaronRojo</PageTitle>
-<hr style="height: 6px; background-color: rgb(0, 0, 0)">
-<div style="text-align: center; margin-bottom: 20px;">
-    <h1>BaronRojo SteakHouse</h1>
-    <p>Sistema de Gestion de Facturas y Ventas</p>
-</div>
-<div style="margin-bottom: 30px; padding: 15px; border: 1px solid #ccc;">
-    <h3 style="margin-top: 0;">Cuadro de Honor</h3>
-    
-    <div style="display: flex; flex-wrap: wrap; gap: 40px;">
-        
-        <div>
-            <strong>Mejor Cliente</strong>
-            <div style="font-size: 1.1em;">@statsMejorCliente</div>
+<div class="container-dashboard">
+    <div class="brand-header">
+        <h1>BaronRojo <span style="color: var(--color-primary);">SteakHouse</span></h1>
+        <p>Sistema de Gestión & Ventas</p>
+    </div>
+
+    <div class="stats-grid">
+        <div class="card">
+            <div class="stat-header">
+                <span class="stat-icon">👑</span>
+                <span class="stat-label">Mejor Cliente</span>
+            </div>
+            <span class="stat-value" style="color: var(--color-primary);">@statsMejorCliente</span>
         </div>
 
-        <div>
-            <strong>Platillo Mas Vendido</strong>
-            <div style="font-size: 1.1em;">@statsPlatilloTop</div>
+        <div class="card">
+            <div class="stat-header">
+                <span class="stat-icon">🍽️</span>
+                <span class="stat-label">Platillo Top</span>
+            </div>
+            <span class="stat-value">@statsPlatilloTop</span>
         </div>
 
-        <div>
-            <strong>Bebida Mas Vendida</strong>
-            <div style="font-size: 1.1em;">@statsBebidaTop</div>
+        <div class="card">
+            <div class="stat-header">
+                <span class="stat-icon">🍷</span>
+                <span class="stat-label">Bebida Top</span>
+            </div>
+            <span class="stat-value">@statsBebidaTop</span>
         </div>
 
-        <div>
-            <strong>Records de Factura</strong>
-            <div>Mas Cara: @statsFacturaCara</div>
-            <div>Mas Barata: @statsFacturaBarata</div>
+        <div class="card">
+            <div class="stat-header">
+                <span class="stat-icon">📊</span>
+                <span class="stat-label">Récords ($)</span>
+            </div>
+            <div class="mini-stat">
+                <span>Alta:</span> <strong>@statsFacturaCara</strong>
+            </div>
+            <div class="mini-stat">
+                <span>Baja:</span> <strong>@statsFacturaBarata</strong>
+            </div>
         </div>
 
-        <div>
-            <strong>Mejores Tiempos</strong>
-            <div>Mejor Mes: @statsMejorMes</div>
-            <div>Mejor Año: @statsMejorAnio</div>
-        </div>
-        <div>
-            <strong>Peores Tiempos</strong>
-            <div>Peor mes: @statsPeorMes</div>
-            <div>Peor año: @statsPeorAnio</div>
+        <div class="card">
+            <div class="stat-header">
+                <span class="stat-icon">📅</span>
+                <span class="stat-label">Momentos Clave</span>
+            </div>
+            <div class="mini-stat">
+                <span>Mejor mes/año:</span>
+                <span>
+                    <strong style="color: var(--color-success);">▲ @statsMejorMes</strong> 
+                    <small>Año: @statsMejorAnio</small>
+                </span>
+            </div>
+            <div class="mini-stat">
+                <span>Peor mes/año:</span>
+                <span>
+                    <strong style="color: #dc3545;">▼ @statsPeorMes</strong> 
+                    <small>Año: @statsPeorAnio</small>
+                </span>
+            </div>
         </div>
     </div>
-</div> 
+    
+    </div>
 <hr style="height: 6px; background-color: rgb(0, 0, 0)">
 <h4>@(facturaEnEdicion == null ? "Crear Nueva Factura" : $"Editando Factura ID: {facturaEnEdicion.Id}")</h4>
 <div>
