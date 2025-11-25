@@ -143,14 +143,16 @@
     </div>
 </div>
 
-<h4>Generar Reporte Anual</h4>
-<div>
-    <label>Año:</label>
-    <input @bind="anioReporte" type="number" min="2000" max="2026" style="width: 100px;" />
-    <button @onclick="IrAReporte" style="margin-left: 10px;">Generar Reporte</button>
-</div>
+<div class="card" style="flex-direction: row; align-items: flex-end; justify-content: center; margin-bottom: 40px;">
+        <div class="input-wrapper">
+            <label>Generar Reporte Anual</label>
+            <div style="display:flex; gap: 10px;">
+                <input @bind="anioReporte" type="number" min="2000" max="2030" style="width: 100px;" />
+                <button class="btn-secondary" @onclick="IrAReporte">Ver Reporte →</button>
+            </div>
+        </div>
+    </div>
 
-<hr style="height: 6px; background-color: rgb(0, 0, 0)">
 <h4>Facturas Guardadas</h4>
 @if (controlador.facturas == null || controlador.facturas.Count == 0)
 {
