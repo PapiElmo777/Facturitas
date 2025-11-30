@@ -1,0 +1,102 @@
+@page "/el-archivo-secreto"
+@using blazor.Components.Data
+@using blazor.Components.Servicios
+@rendermode InteractiveServer
+@inject ServicioControlador controlador
+@inject NavigationManager Navegador
+
+<PageTitle>???</PageTitle>
+
+<div class="container-dashboard">
+    @if (!accesoConcedido)
+    {
+        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height: 60vh;">
+            <h1 style="font-size: 3rem;">ACCESO RESTRINGIDO</h1>
+            <p>Introduce la clave de seguridad.</p>
+            
+            <div style="display:flex; gap:10px;">
+                <input type="password" @bind="passwordInput" placeholder="Contraseña..." style="padding: 10px; border-radius: 5px; border: 1px solid #ccc;" />
+                <button class="btn-primary" @onclick="VerificarPassword">Acceder</button>
+            </div>
+            @if (errorPass)
+            {
+                <p style="color: red; margin-top: 10px; font-weight: bold;">Acceso Denegado.</p>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="brand-header">
+            <h1 style="color: #6c757d;">El Archivo <span style="color: var(--color-danger);">Muerto</span></h1>
+            <p>Facturas ocultas del sistema principal</p>
+            <button class="btn-secondary" @onclick='() => Navegador.NavigateTo("/")'>← Volver a la luz</button>
+        </div>
+
+        @if (controlador.facturas == null || !controlador.facturas.Any(f => f.Archivada))
+        {
+            <div class="card" style="text-align: center; padding: 40px;">
+                <h3>Vacío</h3>
+                <p>No hay facturas archivadas actualmente.</p>
+            </div>
+        }
+        else
+        {
+            <div style="background: white; border-radius: var(--radius-l); padding: 20px; box-shadow: var(--shadow-soft);">
+                <table class="table-modern">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Fecha</th>
+                            <th>Cliente</th>
+                            <th>Total</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var factura in controlador.facturas.Where(f => f.Archivada))
+                        {
+                            <tr style="opacity: 0.7;">
+                                <td>#@factura.Id</td>
+                                <td>@factura.Fecha.ToString("yyyy-MM-dd")</td>
+                                <td>@factura.NombreCliente</td>
+                                <td>@factura.Total.ToString("C")</td>
+                                <td>
+                                    <button class="btn-primary" style="background-color: #28a745;" @onclick="() => Desarchivar(factura.Id)">
+                                        ♻ Desarchivar
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    }
+</div>
+
+@code {
+    private string passwordInput = "";
+    private bool accesoConcedido = false;
+    private bool errorPass = false;
+    private const string PASSWORD_SECRETA = "TuveFe"; 
+
+    void VerificarPassword()
+    {
+        if (passwordInput == PASSWORD_SECRETA)
+        {
+            accesoConcedido = true;
+            errorPass = false;
+            controlador.CargarFacturas();
+        }
+        else
+        {
+            errorPass = true;
+            passwordInput = "";
+        }
+    }
+
+    void Desarchivar(int id)
+    {
+        controlador.AlternarArchivo(id, false);
+    }
+}

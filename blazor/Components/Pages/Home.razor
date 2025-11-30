@@ -230,21 +230,6 @@
         </div>
     }
 
-    <script>
-    window.teclasPresionadas = "";
-    
-    document.addEventListener('keydown', function(event) {
-        if(event.target.tagName === 'INPUT') return;
-        window.teclasPresionadas += event.key.toUpperCase();
-        if(window.teclasPresionadas.length > 20) {
-            window.teclasPresionadas = window.teclasPresionadas.slice(-20);
-        }
-        if(window.teclasPresionadas.includes("ALGARACLOS")) {
-            window.teclasPresionadas = "";
-            document.getElementById('btn-secret-trigger').click();
-        }
-    });
-</script>
 
 @code {
     private Factura nuevaFactura = new Factura();

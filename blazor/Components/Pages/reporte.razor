@@ -85,7 +85,7 @@
     {
         controlador.CargarFacturas();
         facturasDelAnio = controlador.facturas
-            .Where(f => f.Fecha.Year == Anio)
+            .Where(f => f.Fecha.Year == Anio && !f.Archivada)
             .ToList();
         
         totalAnual = facturasDelAnio.Sum(f => f.Total);
