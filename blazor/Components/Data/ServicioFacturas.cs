@@ -10,6 +10,19 @@ namespace blazor.Components.Data
         public ServicioFacturas()
         {
             connectionString = "Data Source=mibase.db";
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+                try
+                {
+                    var cmd = connection.CreateCommand();
+                    cmd.CommandText = "ALTER TABLE Facturas ADD COLUMN Archivada INTEGER DEFAULT 0;";
+                    cmd.ExecuteNonQuery();
+                }
+                catch
+                {
+                }
+            }
         }
 
         public List<Factura> GetFacturas()
@@ -19,20 +32,21 @@ namespace blazor.Components.Data
             {
                 connection.Open();
                 var cmdFacturas = connection.CreateCommand();
-                cmdFacturas.CommandText = "SELECT Id, Fecha, NombreCliente, Total FROM Facturas";
+                cmdFacturas.CommandText = "SELECT Id, Fecha, NombreCliente, Total, Archivada FROM Facturas";
 
                 using (var readerFacturas = cmdFacturas.ExecuteReader())
                 {
                     while (readerFacturas.Read())
-                {
-                    facturas.Add(new Factura
                     {
-                        Id = readerFacturas.GetInt32(0),
-                        Fecha = DateTime.Parse(readerFacturas.GetString(1)),
-                        NombreCliente = readerFacturas.GetString(2),
-                        Items = new List<Articulo>() 
-                    });
-                }
+                        facturas.Add(new Factura
+                        {
+                            Id = readerFacturas.GetInt32(0),
+                            Fecha = DateTime.Parse(readerFacturas.GetString(1)),
+                            NombreCliente = readerFacturas.GetString(2),
+                            Archivada = !readerFacturas.IsDBNull(4) && (readerFacturas.GetBoolean(4) || readerFacturas.GetInt32(4) == 1),
+                            Items = new List<Articulo>()
+                        });
+                    }
                 }
                 foreach (var f in facturas)
                 {
@@ -58,6 +72,7 @@ namespace blazor.Components.Data
             }
             return facturas;
         }
+
         public void AddFactura(Factura factura)
         {
             using (var connection = new SqliteConnection(connectionString))
@@ -69,10 +84,12 @@ namespace blazor.Components.Data
 
                     var cmdFactura = connection.CreateCommand();
                     cmdFactura.Transaction = transaction;
-                    cmdFactura.CommandText = "INSERT INTO Facturas (Fecha, NombreCliente, Total) VALUES (@Fecha, @NombreCliente, @Total); SELECT last_insert_rowid();";
+                    cmdFactura.CommandText = "INSERT INTO Facturas (Fecha, NombreCliente, Total, Archivada) VALUES (@Fecha, @NombreCliente, @Total, @Archivada); SELECT last_insert_rowid();";
                     cmdFactura.Parameters.AddWithValue("@Fecha", factura.Fecha);
                     cmdFactura.Parameters.AddWithValue("@NombreCliente", factura.NombreCliente);
                     cmdFactura.Parameters.AddWithValue("@Total", factura.Total);
+                    cmdFactura.Parameters.AddWithValue("@Archivada", factura.Archivada ? 1 : 0);
+                    
                     facturaId = (long)cmdFactura.ExecuteScalar();
 
                     if (facturaId == 0)
@@ -96,6 +113,7 @@ namespace blazor.Components.Data
                 }
             }
         }
+
         public void DeleteFactura(int id)
         {
             using (var connection = new SqliteConnection(connectionString))
@@ -107,6 +125,7 @@ namespace blazor.Components.Data
                 cmd.ExecuteNonQuery();
             }
         }
+
         public void UpdateFactura(Factura factura)
         {
             using (var connection = new SqliteConnection(connectionString))
@@ -116,10 +135,11 @@ namespace blazor.Components.Data
                 {
                     var cmdFactura = connection.CreateCommand();
                     cmdFactura.Transaction = transaction;
-                    cmdFactura.CommandText = "UPDATE Facturas SET Fecha = @Fecha, NombreCliente = @NombreCliente, Total = @Total WHERE Id = @Id";
+                    cmdFactura.CommandText = "UPDATE Facturas SET Fecha = @Fecha, NombreCliente = @NombreCliente, Total = @Total, Archivada = @Archivada WHERE Id = @Id";
                     cmdFactura.Parameters.AddWithValue("@Fecha", factura.Fecha);
                     cmdFactura.Parameters.AddWithValue("@NombreCliente", factura.NombreCliente);
                     cmdFactura.Parameters.AddWithValue("@Total", factura.Total);
+                    cmdFactura.Parameters.AddWithValue("@Archivada", factura.Archivada ? 1 : 0);
                     cmdFactura.Parameters.AddWithValue("@Id", factura.Id);
                     cmdFactura.ExecuteNonQuery();
 
@@ -145,7 +165,17 @@ namespace blazor.Components.Data
             }
         }
 
+        public void CambiarEstadoArchivo(int id, bool archivada)
+        {
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+                var cmd = connection.CreateCommand();
+                cmd.CommandText = "UPDATE Facturas SET Archivada = @Archivada WHERE Id = @Id";
+                cmd.Parameters.AddWithValue("@Archivada", archivada ? 1 : 0);
+                cmd.Parameters.AddWithValue("@Id", id);
+                cmd.ExecuteNonQuery();
+            }
+        }
     }
-    
-    
-    }
+}
