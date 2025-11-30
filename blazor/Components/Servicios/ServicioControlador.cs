@@ -42,6 +42,11 @@ namespace blazor.Components.Servicios
             _servicioFacturas.DeleteFactura(id);
             CargarFacturas();
         }
+        public void AlternarArchivo(int id, bool archivar)
+        {
+            _servicioFacturas.CambiarEstadoArchivo(id, archivar);
+            CargarFacturas();
+        }
     }
     
 }
