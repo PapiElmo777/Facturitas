@@ -2,11 +2,13 @@
 @using blazor.Components.Data
 @using blazor.Components.Servicios
 @using System.Globalization
+@inject IJSRuntime JS
 @rendermode InteractiveServer
 @inject ServicioControlador controlador
 @inject NavigationManager Navegador
 
 <PageTitle>BaronRojo</PageTitle>
+<button id="btn-secret-trigger" style="display:none;" @onclick="IrAlSecreto"></button>
 <div class="container-dashboard">
     <div class="brand-header">
         <h1>BaronRojo <span style="color: var(--color-primary);">SteakHouse</span></h1>
@@ -222,6 +224,21 @@
             </table>
         </div>
     }
+    <script>
+    window.teclasPresionadas = "";
+    
+    document.addEventListener('keydown', function(event) {
+        if(event.target.tagName === 'INPUT') return;
+        window.teclasPresionadas += event.key.toUpperCase();
+        if(window.teclasPresionadas.length > 20) {
+            window.teclasPresionadas = window.teclasPresionadas.slice(-20);
+        }
+        if(window.teclasPresionadas.includes("ALGARACLOS")) {
+            window.teclasPresionadas = "";
+            document.getElementById('btn-secret-trigger').click();
+        }
+    });
+</script>
 
 @code {
     private Factura nuevaFactura = new Factura();
@@ -429,5 +446,14 @@ private static readonly string[] _palabrasClaveBebida =
 
         if (mejorAnio != null) statsMejorAnio = mejorAnio.Anio.ToString();
         if (peorAnio != null) statsPeorAnio = peorAnio.Anio.ToString();
+    }
+    void IrAlSecreto()
+    {
+        Navegador.NavigateTo("/el-archivo-secreto");
+    }
+    void ArchivarFactura(int id)
+    {
+        controlador.AlternarArchivo(id, true); // true = Archivar
+        CalcularEstadisticas();
     }
 }
