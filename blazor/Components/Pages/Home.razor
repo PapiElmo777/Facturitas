@@ -438,13 +438,24 @@ private static readonly string[] _palabrasClaveBebida =
         if (mejorAnio != null) statsMejorAnio = mejorAnio.Anio.ToString();
         if (peorAnio != null) statsPeorAnio = peorAnio.Anio.ToString();
     }
-    void IrAlSecreto()
+    async Task IrAlSecreto()
     {
+        await JS.InvokeVoidAsync("sessionStorage.setItem", "accesoSecreto", "true");
         Navegador.NavigateTo("/el-archivo-secreto");
+
     }
     void ArchivarFactura(int id)
     {
         controlador.AlternarArchivo(id, true);
         CalcularEstadisticas();
     }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("sessionStorage.removeItem", "accesoSecreto");
+        }
+    }
+
+
 }

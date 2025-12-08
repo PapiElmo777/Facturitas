@@ -4,6 +4,7 @@
 @rendermode InteractiveServer
 @inject ServicioControlador controlador
 @inject NavigationManager Navegador
+@inject IJSRuntime JS
 
 <PageTitle>???</PageTitle>
 
@@ -77,9 +78,37 @@
 @code {
     private string passwordInput = "";
     private bool accesoConcedido = false;
+    private bool accesoAutorizado = false;
+    private bool verificandoAcceso = true;
     private bool errorPass = false;
     private const string PASSWORD_SECRETA = "TuveFe"; 
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                try
+                {
+                    var resultado = await JS.InvokeAsync<string>("sessionStorage.getItem", "accesoSecreto");
+                    accesoAutorizado = resultado == "true";
+                    
+                    if (!accesoAutorizado)
+                    {
+                        Navegador.NavigateTo("/", true);
+                    }
+                    else
+                    {
+                        controlador.CargarFacturas();
+                        verificandoAcceso = false;
+                        StateHasChanged();
+                    }
+                }
+                catch
+                {
+                    Navegador.NavigateTo("/", true);
+                }
+            }
+        }
     void VerificarPassword()
     {
         if (passwordInput == PASSWORD_SECRETA)
